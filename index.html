@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Kamu Sayang Enggak Sama Aku?</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #ffccd5;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            flex-direction: column;
+        }
+        .container {
+            background-color: #ffffff;
+            border-radius: 20px;
+            padding: 30px;
+            width: 95%;
+            max-width: 500px;
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
+            position: relative;
+        }
+        img {
+            width: 120px;
+            height: 120px;
+            margin-bottom: 15px;
+        }
+        button, input {
+            margin: 15px;
+            padding: 15px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 20px;
+        }
+        .hidden {
+            display: none;
+        }
+        .btn-container {
+            display: flex;
+            justify-content: space-around;
+        }
+        .slider-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        #lyrics {
+            font-size: 18px;
+            font-weight: bold;
+            margin-top: 10px;
+            color: #ff3366;
+        }
+    </style>
+</head>
+<body>
+    <!-- Bucin Music -->
+    <audio id="bucinAudio" src="Bucin.mp3" preload="auto" loop></audio>
+    <audio id="specialAudio" src="special.mp3" preload="auto"></audio>
+    
+    <p id="lyrics">🎶 Aku sayang kamu~ 🎶</p>
+    
+    <div class="container" id="step1">
+        <img src="https://i.pinimg.com/originals/a8/5c/fa/a85cfa512f05501f4df90fe1967de58e.gif" alt="Icon">
+        <p style="font-size: 22px;">Hai, Kamu!</p>
+        <p style="font-size: 24px;">Kamu Sayang Enggak Sama Aku? ❤️</p>
+        <div class="btn-container">
+            <button onclick="startAudio(); nextStep(2, true)">Sayang</button>
+            <button onclick="startAudio(); nextStep(2, false)">Enggak</button>
+        </div>
+    </div>
+    
+    <div class="container hidden" id="step2">
+        <img id="giftImage" src="https://i.pinimg.com/originals/69/16/67/6916671499c086667e475c14b741d64b.gif" alt="Icon">
+        <p id="giftText" style="font-size: 22px;">Oh iya, kamu sayang sama aku berapa persen nih? 😊</p>
+        <div class="slider-container">
+            <input type="range" min="0" max="100" value="50" id="loveMeter">
+            <p id="loveValue" style="font-size: 22px;">50%</p>
+        </div>
+        <button onclick="nextStep(3, true)">Lanjut</button>
+    </div>
+    
+    <div class="container hidden" id="step3">
+        <img id="finalGift" src="https://media.tenor.com/PXWh80tfKXIAAAAM/cute-fingers-fixed-cat.gif" alt="Icon">
+        <p id="finalText" style="font-size: 22px;">Makasi udah sayang sama aku <span id="finalLove">100%</span> ❤️</p>
+        <button onclick="restart()">Kembali</button>
+    </div>
+    
+    <script>
+        function startAudio() {
+            let bucinAudio = document.getElementById('bucinAudio');
+            let playPromise = bucinAudio.play();
+    
+            if (playPromise !== undefined) {
+                playPromise.catch(() => {
+                    document.addEventListener("click", function() {
+                        bucinAudio.play();
+                    }, { once: true });
+                });
+            }
+        }
+    
+        function nextStep(step, sayang) {
+            document.getElementById('step1').classList.add('hidden');
+            document.getElementById('step2').classList.add('hidden');
+            document.getElementById('step3').classList.add('hidden');
+    
+            document.getElementById('step' + step).classList.remove('hidden');
+    
+            if (step === 2 && !sayang) {
+                document.getElementById('giftImage').src = "https://i.pinimg.com/originals/ba/05/84/ba05848aa94062e65b730304a4c20cfb.gif";
+                document.getElementById('giftText').innerText = "Yah, kok enggak sih? Aku sedih 😢";
+            }
+    
+            if (step === 3) {
+                let loveValue = document.getElementById('loveMeter').value;
+                document.getElementById('finalLove').innerText = loveValue + "%";
+    
+                let finalGift = document.getElementById('finalGift');
+                let finalText = document.getElementById('finalText');
+                let specialAudio = document.getElementById('specialAudio');
+    
+                if (loveValue == 100) {
+                    finalGift.src = "https://i.pinimg.com/originals/84/45/c9/8445c9b61ab70fafa06e518fd72c7172.gif";
+                    finalText.innerText = "Yay! Aku juga sayang kamu 100%! ❤️🥰 Ini hadiah spesial buat kamu! 🎁";
+                    specialAudio.play();
+                } else {
+                    specialAudio.pause();
+                    specialAudio.currentTime = 0;
+                }
+            }
+        }
+    
+        function restart() {
+            document.getElementById('step1').classList.remove('hidden');
+            document.getElementById('step2').classList.add('hidden');
+            document.getElementById('step3').classList.add('hidden');
+            
+            let specialAudio = document.getElementById('specialAudio');
+            specialAudio.pause();
+            specialAudio.currentTime = 0;
+        }
+    
+        document.getElementById('loveMeter').addEventListener('input', function() {
+            let loveValue = this.value;
+            document.getElementById('loveValue').innerText = loveValue + "%";
+            let giftImage = document.getElementById('giftImage');
+            let giftText = document.getElementById('giftText');
+            let specialAudio = document.getElementById('specialAudio');
+    
+            if (loveValue == 100) {
+                giftImage.src = "https://i.pinimg.com/originals/84/45/c9/8445c9b61ab70fafa06e518fd72c7172.gif";
+                giftText.innerText = "Wahh! Aku juga sayang kamu 100%! ❤️🥰";
+                specialAudio.play();
+            } else {
+                giftImage.src = "https://i.pinimg.com/originals/69/16/67/6916671499c086667e475c14b741d64b.gif";
+                giftText.innerText = "Oh iya, seberapa sayang emangnya? 😊";
+                specialAudio.pause();
+                specialAudio.currentTime = 0;
+            }
+        });
+    
+        window.onload = function() {
+            startAudio();
+        };
+    </script>
